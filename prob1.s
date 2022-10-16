@@ -6,31 +6,26 @@ la x12, vetor
 addi x13, x0, 7
 addi x13, x13, -1
 slli x13, x13, 2
-# x13 is the size
-add x19,x0,x0
-## firts position of vetor
+add x13, x13, x12
 jal x1, inverte
-beq x0,x0, FIM
-inverte:
-add x15, x12,x13
-lw x17, 0(x15)
-add x16, x12, x19
-lw x18, 0(x16)
-// x15 is the 
-sw x17, 0(x16)
-sw x18, 0(x15)
-addi x13, x13, -4
-addi x19, x19,4
-beq x13,x19 FIM
-# jalr
-jalr x0, 0(x1)
-# ##### END MODIFIQUE AQUI END #####
-FIM: 
-lw x11, 0(x12)
-lw x11, 4(x12)
-lw x11, 8(x12)
-lw x11, 12(x12)
-lw x11, 16(x12)
-lw x11, 20(x12)
-lw x11, 24(x12)
-add x1, x0, x10
+beq x0, x0, FIM
+##### START MODIFIQUE AQUI START #####
+inverte: 
+    addi sp, sp, 4
+    sw x1, 0(sp)
+    blt x13,x12, FINALIZA_INVERTE
+# -------------------------- swap x18 and x19 -----------------------------------
+    lw x18, 0(x12)
+    lw x19, 0(x13)
+    sw x18, 0(x13)
+    sw x19, 0(x12)
+#--------------------------- x12 walk -> and x13 walk <- --------------------------------
+    addi x12,x12,4
+    addi x13,x13,-4
+    jal x1, inverte
+FINALIZA_INVERTE:
+    lw x1, 0(sp)
+    addi sp, sp, -4
+    jalr x0, 0(x1)
+##### END MODIFIQUE AQUI END #####
+FIM: add x1, x0, x10
